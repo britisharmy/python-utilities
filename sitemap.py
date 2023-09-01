@@ -16,9 +16,14 @@ sitemap_file = "sitemap.xml"  # Output file for the sitemap
 visited_links = set()
 sitemap_links = set()
 
+# Set the user-agent to mimic a Chrome browser
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+
 def get_links(url):
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             links = [a['href'] for a in soup.find_all('a', href=True)]
@@ -40,7 +45,7 @@ def crawl_website(url):
 
 def check_url(url):
     try:
-        response = requests.head(url)
+        response = requests.head(url, headers=headers)
         if response.status_code == 200:
             if url not in sitemap_links:
                 sitemap_links.add(url)  # Add the link to the sitemap
